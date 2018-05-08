@@ -5,8 +5,8 @@ import numpy as np
 # Undefined parameters
 Ea = 10.8  #kcal per mole
 N = 3 # number of strains
-K = 20 # number of residues on the strain (and possible binding sites)
-Kv = 18 # number of variable residues
+K = 46 # number of residues on the strain (and possible binding sites)
+Kv = 40 # number of variable residues
 kT = 0.0019872041 * 310  #kcal per mole 
 # C = 500*1000*1000 /(6.022140857*10**23) # number of moles per liter, https://academic.oup.com/jid/article/181/4/1280/852328
 C = 0.5
@@ -18,16 +18,17 @@ affinity = uniform(low=Ea-kT,high=Ea+kT,size=3)
 
 # replicating
 S = np.ones([N,K])
-
+# add mutation in Sk
 M=len(H)
 H = np.zeros([3,N,K])
 
 for i in range(len(affinity)): 
-	alpha = affinity[i]
-	h = exponential(size = K)
-	h_mean = np.mean(h)
-	h = [x/h_mean * alpha for x in h]
-	H[i] = h
+	for j in range(N):
+		alpha = affinity[i]
+		h = exponential(size = K)
+		h_mean = np.mean(h)
+		h = [x/h_mean * alpha for x in h]
+		H[i,j] = h
 
 for i in range(9):
 	H = H + H
@@ -49,6 +50,8 @@ for i in range(M):
 
 
 # Selection 
-# probability of internalizing 
-# mutation
 
+
+# Replication + Mutation
+
+# Termination 
