@@ -1,4 +1,4 @@
-from numpy.random import normal
+from numpy.random import uniform
 from numpy.random import exponential
 import numpy as np
 
@@ -14,27 +14,25 @@ C = [C]*N
 # Germinal Center 
 # Three cells that passes the threshold
 
-affinity = normal(loc=0, scale=(Ea/1.644853626951/K), size=30)
-affinity = [x for x in affinity if x>(Ea/K)]
+affinity = uniform(low=Ea-kT,high=Ea+kT,size=3)
 
 # replicating
 S = np.ones([N,K])
 
+M=len(H)
+H = np.zeros([3,N,K])
+
 for i in range(len(affinity)): 
 	alpha = affinity[i]
-	h = exponential(size = M)
+	h = exponential(size = K)
 	h_mean = np.mean(h)
 	h = [x/h_mean * alpha for x in h]
 	H[i] = h
 
-
 for i in range(9):
 	H = H + H
 
-M=len(H)
 E = np.zeros([M, N] )
-H = np.zeros([M,N,K])
-
 
 # Calculating Binding Strengh
 Pi= np.zeros([M])
