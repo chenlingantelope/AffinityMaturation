@@ -2,7 +2,7 @@ from numpy.random import uniform
 from numpy.random import exponential
 from numpy.random import binomial
 import numpy as np
-from Functions.py import *
+from Functions import *
 # Undefined parameters
 Ea = 10.8  #kcal per mole
 N = 3 # number of strains
@@ -13,6 +13,16 @@ kT = 0.0019872041 * 310  #kcal per mole
 C = 0.5
 C = [C]*N
 # Germinal Center 
+delta_E = {(-6.4, -6): 0.025, (-6, -5.6): 0.005, (-5.6, -5.2): 0.035,
+(-5.2, -4.8): 0.06, (-4.8, -4.4): 0.06, (-4.4, -4): 0.15,  (-4, -3.6): 0.15, 
+(-3.6, -3.2): 0.19, (-3.2, -2.8): 0.23, (-2.8, -2.4): 0.23, (-2.4, -2): 0.28, 
+(-2, -1.6): .32, (-1.6, -1.2): .32, (-1.2, -.8): .55, (-.8, -.4): 0.42, (-0.4, 0): 0.7, (0, 0.4): 0.67, 
+(0.4, 0.8): 0.35, (0.8, 1.2): .13, (1.2, 1.6): 0.08}
+total = sum(delta_E.itervalues(), 0.0)
+delta_E = {k: v / total for k, v in delta_E.items()}
+
+values, probabilities = zip(*delta_E.items())
+
 # Three cells that passes the threshold
 
 affinity = uniform(low=Ea-kT,high=Ea+kT,size=3)
@@ -47,6 +57,21 @@ for t in range(tmax):
 	temp = np.rollaxis(np.dstack(temp),-1)
 	H = temp
 	# Replication + Mutation
+	temp = []
+	for item in H:
+		for _ in range(0,2):
+			if uniform(0, 1) < 0.14:
+				cell_fate = uniform(0,1)
+				if cell_fate < 0.2:
+					uniform_sampling_range = values[np.random.choice(range(0,len(probabilities)), p=probabilities)]
+					dE = uniform(uniform_sampling_range[0], uniform_sampling_range[1])
+					
+				elif cell_fate < 0.5:
+					temp.append(item)
+
+			else:
+				temp.append(item)
+
 	H = np.concatenate([H,H,H,H],0)
 	M = len(H)
 	# Termination 
