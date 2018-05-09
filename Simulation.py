@@ -99,3 +99,4 @@ for t in range(tmax):
 	if(M<2):
 		break
 
+BindingStrengthSingle(H, S[j], kT,Kv,K, C, Ea)

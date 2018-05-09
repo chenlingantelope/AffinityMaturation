@@ -17,4 +17,3 @@ def BindingStrength(M, N, H, S, kT,Kv,K, C, Ea):
 	Ph = [Ph[i] / (Ph[i] +  1.0/(len(Ph) * Ctot) * (np.sum(Ph[0:(i - 1)]) + np.sum(Ph[(i + 1):len(Ph)]))) for i in
 		  range(len(Ph))]
 	return Ph, Pi
-
