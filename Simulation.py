@@ -35,7 +35,7 @@ H = np.zeros([3,K])
 for i in range(len(affinity)): 
 	for j in range(N):
 		alpha = affinity[i]
-		h = exponential(size = K)
+		h = uniform(-.18, 0.9, size = K)
 		h_sum = np.sum(h)
 		h = [x/h_sum * alpha for x in h]
 		H[i,:] = h
