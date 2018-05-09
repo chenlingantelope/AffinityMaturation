@@ -103,3 +103,4 @@ def generate_H():
 
 generate_H()
 
+BindingStrengthSingle(H, S[j], kT,Kv,K, C, Ea)
