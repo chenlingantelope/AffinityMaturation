@@ -32,71 +32,74 @@ affinity = uniform(low=Ea-kT,high=Ea+kT,size=3)
 S = np.ones([N,K])
 # add mutation in Sk
 for i in range(len(S)):
-	mut = choice(range(Kv),size=3,replace=False)
+	mut = choice(range(Kv),size=5,replace=False)
 	for j in mut:
 		S[i,j] = -1
 
 # replicating
-H = np.zeros([3,K])
+def generate_H():
+	H = np.zeros([3,K])
 
-for i in range(len(affinity)): 
-	for j in range(N):
-		alpha = affinity[i]
-		h = uniform(-.18, 0.9, size = K)
-		h_sum = np.sum(h)
-		h = [x/h_sum * alpha for x in h]
-		H[i,:] = h
+	for i in range(len(affinity)):
+		for j in range(N):
+			alpha = affinity[i]
+			h = uniform(-.18, 0.9, size = K)
+			h_sum = np.sum(h)
+			h = [x/h_sum * alpha for x in h]
+			H[i,:] = h
 
 
-for i in range(9):
-	H = np.concatenate([H,H],0)
+	for i in range(9):
+		H = np.concatenate([H,H],0)
 
-M=len(H)
+	M=len(H)
 
-tmax = 240
-for t in range(tmax):
-	# Calculating Binding Strengh
-	Ph,Pi = BindingStrength(M, N, H, S, kT,Kv,K, C, Ea)
-	# Selection 
-	# for each cell, the probability of survival is Ph * Pi
-	survival = [binomial(n=1,p=Ph[i]*Pi[i]) for i in range(len(Ph))]
-	temp = [H[i,:] for i in range(len(survival)) if survival[i]==1]
-	#temp = np.rollaxis(np.dstack(temp),-1)
-	H = temp
-	# Replication + Mutation
-	for __ in range(0,2):
-		temp = []
-		for item in H:
-			for _ in range(0,2):
-				# Check if there is a mutation
-				if uniform(0, 1) < 0.14:
-					# Type of mutation
-					cell_fate = uniform(0,1)
-					if cell_fate < 0.2:
-						uniform_sampling_range = values[np.random.choice(range(0,len(probabilities)), p=probabilities)]
-						dE = uniform(uniform_sampling_range[0], uniform_sampling_range[1])
-						item = item.copy()
-						index = np.random.choice(range(0, len(item)))
-						s_k = 1
-						#if index < Kv:
-							#s_k = 1
-						item[index] += s_k * dE
+	tmax = 240
+	for t in range(tmax):
+		# Calculating Binding Strengh
+		Ph,Pi = BindingStrength(M, N, H, S, kT,Kv,K, C, Ea)
+		# Selection
+		# for each cell, the probability of survival is Ph * Pi
+		survival = [binomial(n=1,p=Ph[i]*Pi[i]) for i in range(len(Ph))]
+		temp = [H[i,:] for i in range(len(survival)) if survival[i]==1]
+		#temp = np.rollaxis(np.dstack(temp),-1)
+		H = temp
+		# Replication + Mutation
+		for __ in range(0,2):
+			temp = []
+			for item in H:
+				for _ in range(0,2):
+					# Check if there is a mutation
+					if uniform(0, 1) < 0.14:
+						# Type of mutation
+						cell_fate = uniform(0,1)
+						if cell_fate < 0.2:
+							uniform_sampling_range = values[np.random.choice(range(0,len(probabilities)), p=probabilities)]
+							dE = uniform(uniform_sampling_range[0], uniform_sampling_range[1])
+							item = item.copy()
+							index = np.random.choice(range(0, len(item)))
+							s_k = 1
+							#if index < Kv:
+								#s_k = 1
+							item[index] += s_k * dE
 
-						temp.append(item)
-					elif cell_fate < 0.7:
+							temp.append(item)
+						elif cell_fate < 0.7:
+							temp.append(item.copy())
+
+					else:
 						temp.append(item.copy())
-
-				else:
-					temp.append(item.copy())
-		H = np.array(temp)
-	#H = np.concatenate([H,H,H,H],0)
-	M = len(H)
-	print len(H)
+			H = np.array(temp)
+		#H = np.concatenate([H,H,H,H],0)
+		M = len(H)
+		print len(H)
 
 
-	# Termination
-	if(M>1536):
-		break 
-	if(M<2):
-		break
+		# Termination
+		if(M>1536):
+			break
+		if(M<2):
+			break
+
+generate_H()
 
