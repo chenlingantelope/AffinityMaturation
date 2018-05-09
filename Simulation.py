@@ -63,7 +63,6 @@ for t in range(tmax):
 	temp = [H[i,:] for i in range(len(survival)) if survival[i]==1]
 	#temp = np.rollaxis(np.dstack(temp),-1)
 	H = temp
-	print len(H)
 	# Replication + Mutation
 	for __ in range(0,2):
 		temp = []
@@ -79,8 +78,8 @@ for t in range(tmax):
 						item = item.copy()
 						index = np.random.choice(range(0, len(item)))
 						s_k = 1
-						if index < Kv:
-							s_k = -1
+						#if index < Kv:
+							#s_k = 1
 						item[index] += s_k * dE
 
 						temp.append(item)
@@ -92,6 +91,8 @@ for t in range(tmax):
 		H = np.array(temp)
 	#H = np.concatenate([H,H,H,H],0)
 	M = len(H)
+	print len(H)
+
 
 	# Termination
 	if(M>1536):
