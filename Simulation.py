@@ -7,7 +7,7 @@ from Functions import *
 Ea = 10.8  #kcal per mole
 N = 3 # number of strains
 K = 46 # number of residues on the strain (and possible binding sites)
-Kv = 40 # number of variable residues
+Kv = 28 # number of variable residues (6 of these can potentially block)
 kT = 0.0019872041 * 310  #kcal per mole 
 # C = 500*1000*1000 /(6.022140857*10**23) # number of moles per liter, https://academic.oup.com/jid/article/181/4/1280/852328
 C = 0.5
@@ -49,32 +49,44 @@ M=len(H)
 tmax = 240
 for t in range(tmax):
 	# Calculating Binding Strengh
-	Ph,Pi = BindingStrength(M, N, H, S, kT,Kv,K)
+	Ph,Pi = BindingStrength(M, N, H, S, kT,Kv,K, C, Ea)
 	# Selection 
 	# for each cell, the probability of survival is Ph * Pi
 	survival = [binomial(n=1,p=Ph[i]*Pi[i]) for i in range(len(Ph))]
 	temp = [H[i,:] for i in range(len(survival)) if survival[i]==1]
-	temp = np.rollaxis(np.dstack(temp),-1)
+	#temp = np.rollaxis(np.dstack(temp),-1)
 	H = temp
+	print len(H)
 	# Replication + Mutation
-	temp = []
-	for item in H:
-		for _ in range(0,2):
-			if uniform(0, 1) < 0.14:
-				cell_fate = uniform(0,1)
-				if cell_fate < 0.2:
-					uniform_sampling_range = values[np.random.choice(range(0,len(probabilities)), p=probabilities)]
-					dE = uniform(uniform_sampling_range[0], uniform_sampling_range[1])
-					
-				elif cell_fate < 0.5:
-					temp.append(item)
+	for __ in range(0,2):
+		temp = []
+		for item in H:
+			for _ in range(0,2):
+				# Check if there is a mutation
+				if uniform(0, 1) < 0.14:
+					# Type of mutation
+					cell_fate = uniform(0,1)
+					if cell_fate < 0.2:
+						uniform_sampling_range = values[np.random.choice(range(0,len(probabilities)), p=probabilities)]
+						dE = uniform(uniform_sampling_range[0], uniform_sampling_range[1])
+						item = item.copy()
+						index = np.random.choice(range(0, len(item)))
+						s_k = 1
+						if index < Kv:
+							s_k = -1
+						item[index] += s_k * dE
 
-			else:
-				temp.append(item)
+						temp.append(item)
+					elif cell_fate < 0.7:
+						temp.append(item.copy())
 
-	H = np.concatenate([H,H,H,H],0)
+				else:
+					temp.append(item.copy())
+		H = np.array(temp)
+	#H = np.concatenate([H,H,H,H],0)
 	M = len(H)
-	# Termination 
+
+	# Termination
 	if(M>1536):
 		break 
 	if(M<2):

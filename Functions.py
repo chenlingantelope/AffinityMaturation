@@ -1,6 +1,8 @@
-def BindingStrength(M, N, H, S, kT,Kv,K):
+import numpy as np
+def BindingStrength(M, N, H, S, kT,Kv,K, C, Ea):
 	Pi= np.zeros([M])
 	Ph= np.zeros([M])
+	E = np.zeros([M,N])
 	for i in range(M):
 		temp1 = np.zeros(N)
 		temp2 = np.zeros(N)
