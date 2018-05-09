@@ -20,7 +20,7 @@ affinity = uniform(low=Ea-kT,high=Ea+kT,size=3)
 # replicating
 S = np.ones([N,K])
 # add mutation in Sk
-H = np.zeros([3,N,K])
+H = np.zeros([3,K])
 
 for i in range(len(affinity)): 
 	for j in range(N):
@@ -28,7 +28,7 @@ for i in range(len(affinity)):
 		h = exponential(size = K)
 		h_sum = np.sum(h)
 		h = [x/h_sum * alpha for x in h]
-		H[i,j,:] = h
+		H[i,:] = h
 
 
 for i in range(9):
@@ -43,7 +43,7 @@ for t in range(tmax):
 	# Selection 
 	# for each cell, the probability of survival is Ph * Pi
 	survival = [binomial(n=1,p=Ph[i]*Pi[i]) for i in range(len(Ph))]
-	temp = [H[i,:,:] for i in range(len(survival)) if survival[i]==1]
+	temp = [H[i,:] for i in range(len(survival)) if survival[i]==1]
 	temp = np.rollaxis(np.dstack(temp),-1)
 	H = temp
 	# Replication + Mutation

@@ -5,7 +5,7 @@ def BindingStrength(M, N, H, S, kT,Kv,K):
 		temp1 = np.zeros(N)
 		temp2 = np.zeros(N)
 		for j in range(N):
-			E[i,j] = np.sum([H[i,j,k] * S[j,k] for k in range(Kv)]) + np.sum(H[i,j,k] for k in range(Kv+1,K))
+			E[i,j] = np.sum([H[i,k] * S[j,k] for k in range(Kv)]) + np.sum(H[i,k] for k in range(Kv+1,K))
 			temp1[j] = C[j] * np.exp((E[i,j] - Ea)/kT)
 			temp2[j] = np.exp((E[i,j])/kT)
 		Pi[i] = np.sum(temp1)/(1+np.sum(temp1))
