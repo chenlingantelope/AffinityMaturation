@@ -43,6 +43,8 @@ def BindingStrength(H, S, kT,Kv,K, C, Ea):
 
 
 def Replicate(H,values,probabilities):
+	H = np.array(H)
+	H = H[np.random.choice(H.shape[0], int(H.shape[0]*.9), replace=False), :]
 	for __ in range(0,2):
 		temp = []
 		for item in H:
