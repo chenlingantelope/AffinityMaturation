@@ -65,13 +65,13 @@ def Replicate(H,values,probabilities):
 						temp.append(item.copy())
 				else:
 					temp.append(item.copy())
-	H = np.array(temp)
+		H = np.array(temp)
 	return H
 
 def generate_H1(S, kT,Kv,K, C, Ea,affinity,values,probabilities):
 	H = np.zeros([3,K])
 	N = len(S)
-	for i in range(len(affinity)):
+	for i in range(3):
 		for j in range(N):
 			alpha = affinity[i]
 			h = uniform(-.18, 0.9, size = K)
@@ -104,7 +104,7 @@ def generate_H1(S, kT,Kv,K, C, Ea,affinity,values,probabilities):
 def generate_H2(S, kT,Kv,K, C, Ea,affinity,values,probabilities):
 	H = np.zeros([3,K])
 	N = len(S)
-	for i in range(len(affinity)):
+	for i in range(3):
 		for j in range(N):
 			alpha = affinity[i]
 			h = uniform(-.18, 0.9, size = K)
@@ -155,7 +155,7 @@ def generate_H2(S, kT,Kv,K, C, Ea,affinity,values,probabilities):
 def generate_H3(S, kT,Kv,K, C, Ea,affinity,values,probabilities):
 	H = np.zeros([3,K])
 	N = len(S)
-	for i in range(len(affinity)):
+	for i in range(3):
 		for j in range(N):
 			alpha = affinity[i]
 			h = uniform(-.18, 0.9, size = K)
