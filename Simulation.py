@@ -33,9 +33,6 @@ for i in [1,2]:
 	for j in mut:
 		S[i,j] = -1
 
-# replicating
-
-
-H=generate_H1(S, kT,Kv,K, C, Ea,affinity,values)
-
-BindingStrength(H, S[j], kT,Kv,K, C, Ea)
+H1=generate_H1(S, kT,Kv,K, C, Ea,affinity,values,probabilities)
+H2=generate_H2(S, kT,Kv,K, C, Ea,affinity,values,probabilities)
+H3=generate_H3(S, kT,Kv,K, C, Ea,affinity,values,probabilities)
